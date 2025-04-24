@@ -6,6 +6,7 @@ import 'package:flutter_application_1/controller/controller_1.dart';
 import 'package:flutter_application_1/controller/homepage_controller.dart';
 import 'package:flutter_application_1/controller/notification_controller.dart';
 import 'package:flutter_application_1/view/bottom_navigation/bottom_navigation.dart';
+import 'package:flutter_application_1/view/splash_screen/splash_screen.dart';
 
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -74,7 +75,7 @@ class _ToDoListState extends State<ToDoList> {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: BottomNavigation(),
+        home: SplashScreen(),
       ),
     );
   }

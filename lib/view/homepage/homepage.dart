@@ -17,7 +17,6 @@ class _HomepageState extends State<Homepage> {
   @override
   void initState() {
     super.initState();
-    // context.read<NotificationController>().initializeNotification();
     context.read<DummyController>().init();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<HomepageController>().getinikey();
@@ -27,80 +26,125 @@ class _HomepageState extends State<Homepage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[50],
       appBar: AppBar(
         backgroundColor: ColorConstnats.backgroundColor,
+        elevation: 4,
+        shadowColor: Colors.black.withValues(alpha: .2),
         title: Text(
           "My Todo List",
           style: TextStyle(
-              fontWeight: FontWeight.bold, color: ColorConstnats.primarywhite),
+            fontWeight: FontWeight.bold,
+            color: ColorConstnats.primarywhite,
+            fontSize: 22,
+          ),
         ),
+        centerTitle: true,
+        // shape: const RoundedRectangleBorder(
+        //   borderRadius: BorderRadius.vertical(
+        //     bottom: Radius.circular(70),
+        //   ),
+        // ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: ColorConstnats.backgroundColor,
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const CreateTask(isedit: false),
+            ),
+          );
+        },
+        child: const Icon(Icons.add, color: Colors.white),
       ),
       body: Consumer<HomepageController>(
         builder: (context, controller, child) {
           return HomepageController.notelistKeys.isEmpty
               ? Center(
-                  child: InkWell(
-                    onTap: () async {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => CreateTask(
-                            isedit: false,
-                          ),
-                        ),
-                      );
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 40),
-                      child: Container(
-                        height: 50,
-                        decoration: BoxDecoration(
-                            color: ColorConstnats.backgroundColor,
-                            borderRadius: BorderRadius.circular(20)),
-                        child: Center(
-                          child: Text(
-                            "Add New Task",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: ColorConstnats.primarywhite),
-                          ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.assignment_outlined,
+                        size: 80,
+                        color: Colors.grey[300],
+                      ),
+                      const SizedBox(height: 20),
+                      Text(
+                        "No tasks yet",
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.grey[600],
                         ),
                       ),
-                    ),
-                  ),
-                )
-              : Column(
-                  children: [
-                    SizedBox(height: 20),
-                    Expanded(
-                      child: ListView.separated(
-                        itemBuilder: (context, index) {
-                          final currentKey =
-                              HomepageController.notelistKeys[index];
-                          dynamic currentElement =
-                              HomepageController.myBox.get(currentKey);
-
-                          if (currentElement is! Map) {
-                            // log("Unexpected data type in myBox for key $currentKey: $currentElement");
-                            return Container();
-                          }
-
-                          return TodoCard(
-                            index: index,
-                            imageIndex: currentElement["imageIndex"] ?? 0,
-                            title: currentElement["title"] ?? "",
-                            date: currentElement["date"] ?? "",
-                            reason: currentElement["reason"] ?? "no reason",
-                            time: currentElement["time"] ?? "",
+                      const SizedBox(height: 20),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: ColorConstnats.backgroundColor,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 30, vertical: 12),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                        ),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const CreateTask(
+                                isedit: false,
+                              ),
+                            ),
                           );
                         },
-                        separatorBuilder: (context, index) =>
-                            SizedBox(height: 20),
-                        itemCount: HomepageController.notelistKeys.length,
+                        child: const Text(
+                          "Add New Task",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
                       ),
-                    ),
-                    SizedBox(height: 50),
-                  ],
+                    ],
+                  ),
+                )
+              : Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 16),
+                      Expanded(
+                        child: ListView.separated(
+                          physics: const BouncingScrollPhysics(),
+                          itemBuilder: (context, index) {
+                            final currentKey =
+                                HomepageController.notelistKeys[index];
+                            dynamic currentElement =
+                                HomepageController.myBox.get(currentKey);
+
+                            if (currentElement is! Map) {
+                              return Container();
+                            }
+
+                            return TodoCard(
+                              index: index,
+                              imageIndex: currentElement["imageIndex"] ?? 0,
+                              title: currentElement["title"] ?? "",
+                              date: currentElement["date"] ?? "",
+                              reason:
+                                  currentElement["reason"] ?? "No description",
+                              time: currentElement["time"] ?? "",
+                            );
+                          },
+                          separatorBuilder: (context, index) =>
+                              const SizedBox(height: 20),
+                          itemCount: HomepageController.notelistKeys.length,
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                    ],
+                  ),
                 );
         },
       ),

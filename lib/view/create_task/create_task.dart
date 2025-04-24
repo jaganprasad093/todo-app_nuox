@@ -1,8 +1,6 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/controller/Dummy_notification.dart';
-import 'package:flutter_application_1/controller/controller_1.dart';
+import 'package:flutter_application_1/controller/create_task_helper.dart';
 import 'package:flutter_application_1/controller/homepage_controller.dart';
 import 'package:flutter_application_1/controller/notification_controller.dart';
 import 'package:flutter_application_1/core/constants/color_constnats.dart';
@@ -21,286 +19,133 @@ class CreateTask extends StatefulWidget {
 
 class _CreateTaskState extends State<CreateTask> {
   final _formKey = GlobalKey<FormState>();
-
   TextEditingController title_controller = TextEditingController();
   TextEditingController date_controller = TextEditingController();
   TextEditingController time_controller = TextEditingController();
   TextEditingController note_controller = TextEditingController();
   int selectedImage = 0;
+  DateTime selectedDate = DateTime.now();
 
   @override
   void initState() {
-    if (widget.isedit == true) {
+    if (widget.isedit) {
       final editnote = HomepageController.myBox.get(widget.editkey);
-
-      // String savedTitle = HomepageController.myBox.get("title") ?? "";
-      // String savedDate = HomepageController.myBox.get("date") ?? "";
-      // String savedTime = HomepageController.myBox.get("time") ?? "";
-      // String savedReason = HomepageController.myBox.get("reason") ?? "";
-      // String savedImageIndex =
-      //     HomepageController.myBox.get("imageIndex", defaultValue: "");
       time_controller.text = editnote["time"] ?? "";
       title_controller.text = editnote["title"] ?? "";
       date_controller.text = editnote["date"] ?? "";
       note_controller.text = editnote["reason"] ?? "";
       selectedImage = editnote['imageIndex'] ?? 0;
     }
-
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    final isSmallScreen = MediaQuery.of(context).size.width < 600;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: ColorConstnats.backgroundColor,
         title: Text(
-          widget.isedit == true ? "Update task" : "Add New Task",
+          widget.isedit ? "Update task" : "Add New Task",
           style: TextStyle(
-              fontWeight: FontWeight.bold, color: ColorConstnats.primarywhite),
+            fontWeight: FontWeight.bold,
+            color: ColorConstnats.primarywhite,
+            fontSize: isSmallScreen ? 20 : 24,
+          ),
         ),
       ),
       body: GestureDetector(
-        onTap: () {
-          FocusScope.of(context).unfocus();
-        },
+        onTap: () => FocusScope.of(context).unfocus(),
         child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Task Title",
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(height: 8.0),
-                  TextFormField(
-                    controller: title_controller,
-                    decoration: InputDecoration(
-                      labelText: "Task Title",
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                    onSaved: (String? value) {},
-                    validator: (String? value) {
-                      return (value == null || value.isEmpty)
-                          ? 'Please enter a title'
-                          : null;
-                    },
-                  ),
-                  SizedBox(height: 16.0),
-                  Text(
-                    "Category",
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(height: 8.0),
-                  Container(
-                    height: 64,
-                    child: ListView.separated(
-                      scrollDirection: Axis.horizontal,
-                      itemBuilder: (context, index) => InkWell(
-                        onTap: () {
-                          setState(() {});
-                          selectedImage = index;
-                        },
-                        child: CircleAvatar(
-                          radius: 32,
-                          backgroundColor: selectedImage == index
-                              ? ColorConstnats.backgroundColor
-                              : null,
-                          child: CircleAvatar(
-                            radius: 30,
-                            backgroundImage: AssetImage(
-                              context
-                                  .read<HomepageController>()
-                                  .imageList[index],
-                            ),
-                          ),
-                        ),
-                      ),
-                      separatorBuilder: (context, index) => SizedBox(
-                        width: 20,
-                      ),
-                      itemCount:
-                          context.read<HomepageController>().imageList.length,
-                    ),
-                  ),
-                  SizedBox(height: 16.0),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Date",
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            SizedBox(height: 8.0),
-                            TextFormField(
-                              onTap: () => _selectDate(context),
-                              controller: date_controller,
-                              readOnly: true,
-                              decoration: InputDecoration(
-                                labelText: "Date",
-                                suffixIcon: Icon(Icons.date_range_outlined),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                              ),
-                              onSaved: (String? value) {},
-                              validator: (String? value) {
-                                return (value == null || value.isEmpty)
-                                    ? 'Please select date'
-                                    : null;
-                              },
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(width: 16.0),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Time",
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            SizedBox(height: 8.0),
-                            TextFormField(
-                              controller: time_controller,
-                              readOnly: true,
-                              onTap: () => _selectTime(context),
-                              decoration: InputDecoration(
-                                labelText: "Time",
-                                suffixIcon: Icon(Icons.access_time_outlined),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                              ),
-                              onSaved: (String? value) {},
-                              validator: (String? value) {
-                                return (value == null || value.isEmpty)
-                                    ? 'Please select time'
-                                    : null;
-                              },
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  Text(
-                    "Notes",
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  TextFormField(
-                    controller: note_controller,
-                    decoration: InputDecoration(
-                      contentPadding:
-                          EdgeInsets.symmetric(vertical: 50, horizontal: 10),
-                      labelText: "Notes",
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                    onSaved: (String? value) {},
-                    validator: (String? value) {
-                      return (value == null || value.isEmpty)
-                          ? 'Please note'
-                          : null;
-                    },
-                  ),
-                  SizedBox(
-                    height: 60,
-                  ),
-                  InkWell(
-                    onTap: () async {
-                      if (widget.isedit == true) {
-                        if (_formKey.currentState!.validate()) {
-                          context.read<HomepageController>().editNoteList(
-                              title: title_controller.text,
-                              date: date_controller.text,
-                              time: time_controller.text,
-                              reason: note_controller.text,
-                              imageIndex: selectedImage,
-                              key: widget.editkey);
-                          log("data updated to hive");
-                          Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => BottomNavigation(),
-                              ));
-                          log("updated element:${HomepageController.myBox.get(widget.editkey)}");
-                        }
-                      } else {
-                        // final notifcationcontriollere = NotificationService();
-                        // notifcationcontriollere.scheduleNotification(
-                        //     title: "show something",
-                        //     body: "sow curret ",
-                        //     scheduledNotificationDateTime:
-                        //         DateTime.now().add(Duration(minutes: 1)));
+          padding: EdgeInsets.all(isSmallScreen ? 16.0 : 24.0),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildSectionTitle("Task Title"),
+                SizedBox(height: isSmallScreen ? 8.0 : 12.0),
+                _buildTextFormField(
+                  controller: title_controller,
+                  label: "Task Title",
+                  validator: (value) =>
+                      value?.isEmpty ?? true ? 'Please enter a title' : null,
+                ),
+                SizedBox(height: isSmallScreen ? 16.0 : 20.0),
+                _buildSectionTitle("Category"),
+                SizedBox(height: isSmallScreen ? 8.0 : 12.0),
+                _buildCategorySelector(isSmallScreen),
+                SizedBox(height: isSmallScreen ? 16.0 : 20.0),
+                _buildDateTimeRow(isSmallScreen),
+                SizedBox(height: isSmallScreen ? 20.0 : 24.0),
+                _buildSectionTitle("Notes"),
+                SizedBox(height: isSmallScreen ? 5.0 : 8.0),
+                _buildNotesField(),
+                SizedBox(height: isSmallScreen ? 60.0 : 80.0),
+                _buildSaveButton(isSmallScreen),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 
-                        if (_formKey.currentState!.validate()) {
-                          context.read<DummyController>().scheduleNotification(
-                              0,
-                              "show something",
-                              "boby of notification",
-                              date_controller.text,
-                              time_controller.text);
-                          log("date:${date_controller.text}");
-                          log("date:${time_controller.text}");
-                          log("notification send");
-                          await context.read<HomepageController>().addNote(
-                              title: title_controller.text,
-                              date: date_controller.text,
-                              time: time_controller.text,
-                              reason: note_controller.text,
-                              imageIndex: selectedImage);
-                          context.read<HomepageController>().getinikey();
-                          log("image index:$selectedImage");
-                          log("data added to hive");
-                          Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => BottomNavigation(),
-                              ));
-                        }
+  Widget _buildSectionTitle(String text) {
+    return Text(
+      text,
+      style: TextStyle(
+        fontWeight: FontWeight.bold,
+        fontSize: 16,
+      ),
+    );
+  }
 
-                        context
-                            .read<NotificationController>()
-                            .scheduleNotification(
-                              0,
-                              'Scheduled Notification',
-                              'This is a test notification',
-                              DateTime.now().add(Duration(seconds: 5)),
-                            );
-                      }
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 40),
-                      child: Container(
-                        height: 50,
-                        decoration: BoxDecoration(
-                            color: ColorConstnats.backgroundColor,
-                            borderRadius: BorderRadius.circular(20)),
-                        child: Center(
-                          child: Text(
-                            "Save",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: ColorConstnats.primarywhite),
-                          ),
-                        ),
-                      ),
-                    ),
-                  )
-                ],
+  Widget _buildTextFormField({
+    required TextEditingController controller,
+    required String label,
+    required String? Function(String?) validator,
+    bool readOnly = false,
+    VoidCallback? onTap,
+    Widget? suffixIcon,
+    int? maxLines,
+  }) {
+    return TextFormField(
+      controller: controller,
+      decoration: InputDecoration(
+        labelText: label,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        suffixIcon: suffixIcon,
+      ),
+      validator: validator,
+      readOnly: readOnly,
+      onTap: onTap,
+      maxLines: maxLines,
+    );
+  }
+
+  Widget _buildCategorySelector(bool isSmallScreen) {
+    return Container(
+      height: isSmallScreen ? 64 : 80,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        itemCount: context.read<HomepageController>().imageList.length,
+        separatorBuilder: (context, index) => SizedBox(
+          width: isSmallScreen ? 20 : 24,
+        ),
+        itemBuilder: (context, index) => InkWell(
+          onTap: () => setState(() => selectedImage = index),
+          child: CircleAvatar(
+            radius: isSmallScreen ? 32 : 36,
+            backgroundColor:
+                selectedImage == index ? ColorConstnats.backgroundColor : null,
+            child: CircleAvatar(
+              radius: isSmallScreen ? 30 : 34,
+              backgroundImage: AssetImage(
+                context.read<HomepageController>().imageList[index],
               ),
             ),
           ),
@@ -309,36 +154,150 @@ class _CreateTaskState extends State<CreateTask> {
     );
   }
 
-  Future<void> _selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: selectedDate,
-      firstDate: DateTime.now(),
-      lastDate: DateTime(2100),
-    );
-    if (picked != null && picked != selectedDate) {
-      setState(() {
-        selectedDate = picked;
-        date_controller.text = "${picked.toLocal()}".split(' ')[0];
-      });
+  Widget _buildDateTimeRow(bool isSmallScreen) {
+    if (isSmallScreen) {
+      return Column(
+        children: [
+          _buildDateField(),
+          SizedBox(height: isSmallScreen ? 16.0 : 20.0),
+          _buildTimeField(),
+        ],
+      );
     }
+
+    return Row(
+      children: [
+        Expanded(child: _buildDateField()),
+        SizedBox(width: isSmallScreen ? 16.0 : 20.0),
+        Expanded(child: _buildTimeField()),
+      ],
+    );
   }
 
-  Future<void> _selectTime(BuildContext context) async {
-    final TimeOfDay? picked = await showTimePicker(
-      context: context,
-      initialTime: TimeOfDay.now(),
+  Widget _buildDateField() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildSectionTitle("Date"),
+        SizedBox(height: 8.0),
+        _buildTextFormField(
+          controller: date_controller,
+          label: "Date",
+          validator: (value) =>
+              value?.isEmpty ?? true ? 'Please select date' : null,
+          readOnly: true,
+          onTap: () => CreateTaskHelper.selectDate(
+            context,
+            date_controller,
+            (date) => selectedDate = date,
+          ),
+          suffixIcon: Icon(Icons.date_range_outlined),
+        ),
+      ],
     );
-    if (picked != null) {
-      final now = DateTime.now();
-      final dt =
-          DateTime(now.year, now.month, now.day, picked.hour, picked.minute);
-      final format = "${picked.hour}:${picked.minute}";
-      setState(() {
-        time_controller.text = format;
-      });
-    }
   }
 
-  DateTime selectedDate = DateTime.now();
+  Widget _buildTimeField() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildSectionTitle("Time"),
+        SizedBox(height: 8.0),
+        _buildTextFormField(
+          controller: time_controller,
+          label: "Time",
+          validator: (value) =>
+              value?.isEmpty ?? true ? 'Please select time' : null,
+          readOnly: true,
+          onTap: () => CreateTaskHelper.selectTime(context, time_controller),
+          suffixIcon: Icon(Icons.access_time_outlined),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildNotesField() {
+    return _buildTextFormField(
+      controller: note_controller,
+      label: "Notes",
+      validator: (value) =>
+          value?.isEmpty ?? true ? 'Please enter notes' : null,
+      maxLines: 3,
+    );
+  }
+
+  Widget _buildSaveButton(bool isSmallScreen) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: isSmallScreen ? 40.0 : 100.0),
+      child: InkWell(
+        onTap: _handleSave,
+        child: Container(
+          height: isSmallScreen ? 50 : 60,
+          decoration: BoxDecoration(
+            color: ColorConstnats.backgroundColor,
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Center(
+            child: Text(
+              "Save",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: ColorConstnats.primarywhite,
+                fontSize: isSmallScreen ? 16 : 18,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<void> _handleSave() async {
+    if (!CreateTaskHelper.validateForm(
+      _formKey,
+      title_controller,
+      date_controller,
+      time_controller,
+      note_controller,
+    )) return;
+
+    if (widget.isedit) {
+      context.read<HomepageController>().editNoteList(
+            title: title_controller.text,
+            date: date_controller.text,
+            time: time_controller.text,
+            reason: note_controller.text,
+            imageIndex: selectedImage,
+            key: widget.editkey,
+          );
+    } else {
+      context.read<DummyController>().scheduleNotification(
+            0,
+            "show something",
+            "boby of notification",
+            date_controller.text,
+            time_controller.text,
+          );
+
+      await context.read<HomepageController>().addNote(
+            title: title_controller.text,
+            date: date_controller.text,
+            time: time_controller.text,
+            reason: note_controller.text,
+            imageIndex: selectedImage,
+          );
+
+      context.read<NotificationController>().scheduleNotification(
+            0,
+            'Scheduled Notification',
+            'This is a test notification',
+            DateTime.now().add(Duration(seconds: 5)),
+          );
+    }
+
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => BottomNavigation()),
+    );
+  }
 }
