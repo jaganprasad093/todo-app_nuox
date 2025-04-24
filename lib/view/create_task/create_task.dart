@@ -239,48 +239,47 @@ class _CreateTaskState extends State<CreateTask> {
                           log("updated element:${HomepageController.myBox.get(widget.editkey)}");
                         }
                       } else {
-                        final notifcationcontriollere = NotificationService();
-                        notifcationcontriollere.scheduleNotification(
-                            title: "show something",
-                            body: "sow curret ",
-                            scheduledNotificationDateTime:
-                                DateTime.now().add(Duration(minutes: 1)));
+                        // final notifcationcontriollere = NotificationService();
+                        // notifcationcontriollere.scheduleNotification(
+                        //     title: "show something",
+                        //     body: "sow curret ",
+                        //     scheduledNotificationDateTime:
+                        //         DateTime.now().add(Duration(minutes: 1)));
 
-                        // if (_formKey.currentState!.validate()) {
-                        //   context.read<DummyController>().scheduleNotification(
-                        //       0,
-                        //       "show something",
-                        //       "boby of notification",
-                        //       date_controller.text,
-                        //       time_controller.text);
-                        //   log("date:${date_controller.text}");
-                        //   log("date:${time_controller.text}");
-                        //   log("notification send");
-                        //   await context.read<HomepageController>().addNote(
-                        //       title: title_controller.text,
-                        //       date: date_controller.text,
-                        //       time: time_controller.text,
-                        //       reason: note_controller.text,
-                        //       imageIndex: selectedImage);
-                        //   context.read<HomepageController>().getinikey();
-                        //   log("image index:$selectedImage");
-                        //   log("data added to hive");
-                        //   Navigator.pushReplacement(
-                        //       context,
-                        //       MaterialPageRoute(
-                        //         builder: (context) => BottomNavigation(),
-                        //       ));
-                        // }
+                        if (_formKey.currentState!.validate()) {
+                          context.read<DummyController>().scheduleNotification(
+                              0,
+                              "show something",
+                              "boby of notification",
+                              date_controller.text,
+                              time_controller.text);
+                          log("date:${date_controller.text}");
+                          log("date:${time_controller.text}");
+                          log("notification send");
+                          await context.read<HomepageController>().addNote(
+                              title: title_controller.text,
+                              date: date_controller.text,
+                              time: time_controller.text,
+                              reason: note_controller.text,
+                              imageIndex: selectedImage);
+                          context.read<HomepageController>().getinikey();
+                          log("image index:$selectedImage");
+                          log("data added to hive");
+                          Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => BottomNavigation(),
+                              ));
+                        }
 
-                        // context
-                        //     .read<NotificationController>()
-                        //     .scheduleNotification(
-                        //       0,
-                        //       'Scheduled Notification',
-                        //       'This is a test notification',
-                        //       DateTime.now().add(Duration(seconds: 5)),
-                        //     );
-                        //}
+                        context
+                            .read<NotificationController>()
+                            .scheduleNotification(
+                              0,
+                              'Scheduled Notification',
+                              'This is a test notification',
+                              DateTime.now().add(Duration(seconds: 5)),
+                            );
                       }
                     },
                     child: Padding(

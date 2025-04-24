@@ -1,5 +1,4 @@
 import 'dart:developer';
-import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -12,42 +11,40 @@ class DummyController with ChangeNotifier {
       FlutterLocalNotificationsPlugin();
 
   Future<void> init() async {
+    // Initialize timezone
+    tz.initializeTimeZones();
+    final String? timeZoneName = await FlutterTimezone.getLocalTimezone();
+    tz.setLocalLocation(tz.getLocation(timeZoneName!));
+
+    // Android initialization
     const AndroidInitializationSettings initializationSettingsAndroid =
         AndroidInitializationSettings('@mipmap/ic_launcher');
-    const InitializationSettings initializationSettings =
+
+    // iOS initialization
+    final DarwinInitializationSettings initializationSettingsIOS =
+        DarwinInitializationSettings(
+      requestAlertPermission: true,
+      requestBadgePermission: true,
+      requestSoundPermission: true,
+      onDidReceiveLocalNotification:
+          (int id, String? title, String? body, String? payload) async {},
+    );
+
+    // Combined initialization settings
+    final InitializationSettings initializationSettings =
         InitializationSettings(
       android: initializationSettingsAndroid,
+      iOS: initializationSettingsIOS,
     );
-    await flutterLocalNotificationsPlugin.initialize(initializationSettings);
 
-    tz.initializeTimeZones();
-
-    // tz.setLocalLocation(tz.getLocation('Asia/Kolkata'));
-
-    // final String timeZone = 'Asia/Kolkata';
-    // tz.setLocalLocation(tz.getLocation(timeZone));
-
-    // final bool? result = await flutterLocalNotificationsPlugin
-    //     .resolvePlatformSpecificImplementation<
-    //         AndroidFlutterLocalNotificationsPlugin>()
-    //     ?.requestExactAlarmsPermission();
-
-    // if (result != null && !result) {
-    //   log('Notification permission denied');
-    // }
-
-    // log('Notification permission granted');
-
-// second added
-
-    // if (kIsWeb || Platform.isLinux) {
-    //   return;
-    // }
-    // tz.initializeTimeZones();
-    // final String? timeZoneName = await FlutterTimezone.getLocalTimezone();
-    // tz.setLocalLocation(tz.getLocation(timeZoneName!));
+    await flutterLocalNotificationsPlugin.initialize(
+      initializationSettings,
+      onDidReceiveNotificationResponse:
+          (NotificationResponse response) async {},
+    );
   }
 
+  // Rest of your methods remain the same...
   tz.TZDateTime convertDateTime(String date, String time) {
     final tz.TZDateTime now = tz.TZDateTime.now(tz.local);
     final DateTime parsedDate = DateTime.parse(date);
@@ -86,6 +83,7 @@ class DummyController with ChangeNotifier {
           .add(const Duration(minutes: 1)),
       const NotificationDetails(
         android: androidNotificationDetails,
+        iOS: DarwinNotificationDetails(),
       ),
       androidAllowWhileIdle: true,
       uiLocalNotificationDateInterpretation:
