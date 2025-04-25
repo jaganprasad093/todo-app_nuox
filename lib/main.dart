@@ -1,10 +1,10 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/controller/Dummy_notification.dart';
-import 'package:flutter_application_1/controller/controller_1.dart';
-import 'package:flutter_application_1/controller/homepage_controller.dart';
-import 'package:flutter_application_1/controller/notification_controller.dart';
+import 'package:flutter_application_1/view_model/Dummy_notification.dart';
+import 'package:flutter_application_1/view_model/controller_1.dart';
+import 'package:flutter_application_1/view_model/homepage_controller.dart';
+import 'package:flutter_application_1/view_model/notification_controller.dart';
 import 'package:flutter_application_1/view/bottom_navigation/bottom_navigation.dart';
 import 'package:flutter_application_1/view/splash_screen/splash_screen.dart';
 

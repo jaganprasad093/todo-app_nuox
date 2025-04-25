@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/controller/Dummy_notification.dart';
-import 'package:flutter_application_1/controller/create_task_helper.dart';
-import 'package:flutter_application_1/controller/homepage_controller.dart';
-import 'package:flutter_application_1/controller/notification_controller.dart';
+import 'package:flutter_application_1/view_model/Dummy_notification.dart';
+import 'package:flutter_application_1/view_model/create_task_helper.dart';
+import 'package:flutter_application_1/view_model/homepage_controller.dart';
+import 'package:flutter_application_1/view_model/notification_controller.dart';
 import 'package:flutter_application_1/core/constants/color_constnats.dart';
 import 'package:flutter_application_1/view/bottom_navigation/bottom_navigation.dart';
 import 'package:provider/provider.dart';
