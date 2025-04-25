@@ -24,6 +24,17 @@ class _DonePageState extends State<DonePage> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+    final isSmallScreen = screenWidth < 600;
+
+    // Responsive sizing factors
+    final double appBarFontSize = isSmallScreen ? 20 : 24;
+    final double emptyStateIconSize = screenHeight * 0.12;
+    final double emptyStateTextSize = screenHeight * 0.022;
+    final double pagePadding = screenWidth * 0.02;
+    final double itemSpacing = screenHeight * 0.015;
+
     return Scaffold(
       backgroundColor: ColorConstnats.primarywhite,
       appBar: AppBar(
@@ -32,12 +43,15 @@ class _DonePageState extends State<DonePage> {
         title: Text(
           "Completed Task",
           style: TextStyle(
-              fontWeight: FontWeight.bold, color: ColorConstnats.primarywhite),
+            fontWeight: FontWeight.bold,
+            color: ColorConstnats.primarywhite,
+            fontSize: appBarFontSize,
+          ),
         ),
       ),
       body: Consumer<HomepageController>(
         builder: (context, value, child) => Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: EdgeInsets.all(pagePadding),
           child: HomepageController.completedKeys.isEmpty
               ? Center(
                   child: Column(
@@ -45,14 +59,14 @@ class _DonePageState extends State<DonePage> {
                     children: [
                       Icon(
                         Icons.assignment_outlined,
-                        size: 80,
+                        size: emptyStateIconSize,
                         color: Colors.grey[300],
                       ),
-                      const SizedBox(height: 20),
+                      SizedBox(height: screenHeight * 0.025),
                       Text(
-                        "No tasks compeleted yet",
+                        "No tasks completed yet",
                         style: TextStyle(
-                          fontSize: 18,
+                          fontSize: emptyStateTextSize,
                           color: Colors.grey[600],
                         ),
                       ),
@@ -77,7 +91,7 @@ class _DonePageState extends State<DonePage> {
                     );
                   },
                   separatorBuilder: (context, index) => SizedBox(
-                        height: 10,
+                        height: itemSpacing,
                       ),
                   itemCount: HomepageController.completedKeys.length),
         ),

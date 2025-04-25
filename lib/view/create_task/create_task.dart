@@ -41,7 +41,15 @@ class _CreateTaskState extends State<CreateTask> {
 
   @override
   Widget build(BuildContext context) {
-    final isSmallScreen = MediaQuery.of(context).size.width < 600;
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+    final isSmallScreen = screenWidth < 600;
+    final double paddingFactor = isSmallScreen ? 0.04 : 0.03;
+    final double spacingFactor = isSmallScreen ? 0.02 : 0.025;
+    final double avatarRadiusFactor = isSmallScreen ? 0.07 : 0.06;
+    final double buttonHeightFactor = isSmallScreen ? 0.06 : 0.065;
+    final double buttonHorizontalPaddingFactor = isSmallScreen ? 0.1 : 0.2;
+    final double fontSizeFactor = isSmallScreen ? 0.04 : 0.035;
 
     return Scaffold(
       backgroundColor: ColorConstnats.primarywhite,
@@ -53,39 +61,41 @@ class _CreateTaskState extends State<CreateTask> {
           style: TextStyle(
             fontWeight: FontWeight.bold,
             color: ColorConstnats.primarywhite,
-            fontSize: isSmallScreen ? 20 : 24,
+            fontSize: screenWidth * fontSizeFactor,
           ),
         ),
       ),
       body: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
         child: SingleChildScrollView(
-          padding: EdgeInsets.all(isSmallScreen ? 16.0 : 24.0),
+          padding: EdgeInsets.all(screenWidth * paddingFactor),
           child: Form(
             key: _formKey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildSectionTitle("Task Title"),
-                SizedBox(height: isSmallScreen ? 8.0 : 12.0),
+                _buildSectionTitle("Task Title", screenWidth),
+                SizedBox(height: screenHeight * spacingFactor),
                 _buildTextFormField(
                   controller: title_controller,
                   label: "Task Title",
                   validator: (value) =>
                       value?.isEmpty ?? true ? 'Please enter a title' : null,
+                  screenWidth: screenWidth,
                 ),
-                SizedBox(height: isSmallScreen ? 16.0 : 20.0),
-                _buildSectionTitle("Category"),
-                SizedBox(height: isSmallScreen ? 8.0 : 12.0),
-                _buildCategorySelector(isSmallScreen),
-                SizedBox(height: isSmallScreen ? 16.0 : 20.0),
-                _buildDateTimeRow(isSmallScreen),
-                SizedBox(height: isSmallScreen ? 20.0 : 24.0),
-                _buildSectionTitle("Notes"),
-                SizedBox(height: isSmallScreen ? 5.0 : 8.0),
-                _buildNotesField(),
-                SizedBox(height: isSmallScreen ? 60.0 : 80.0),
-                _buildSaveButton(isSmallScreen),
+                SizedBox(height: screenHeight * spacingFactor * 1),
+                _buildSectionTitle("Category", screenWidth),
+                SizedBox(height: screenHeight * spacingFactor),
+                _buildCategorySelector(screenWidth, avatarRadiusFactor),
+                SizedBox(height: screenHeight * spacingFactor * .1),
+                _buildDateTimeRow(screenWidth, screenHeight, isSmallScreen),
+                SizedBox(height: screenHeight * spacingFactor * 1),
+                _buildSectionTitle("Notes", screenWidth),
+                SizedBox(height: screenHeight * spacingFactor * 0),
+                _buildNotesField(screenWidth),
+                SizedBox(height: screenHeight * 0.07),
+                _buildSaveButton(screenWidth, screenHeight, buttonHeightFactor,
+                    buttonHorizontalPaddingFactor, fontSizeFactor),
               ],
             ),
           ),
@@ -94,12 +104,12 @@ class _CreateTaskState extends State<CreateTask> {
     );
   }
 
-  Widget _buildSectionTitle(String text) {
+  Widget _buildSectionTitle(String text, double screenWidth) {
     return Text(
       text,
       style: TextStyle(
         fontWeight: FontWeight.bold,
-        fontSize: 16,
+        fontSize: screenWidth * 0.04,
       ),
     );
   }
@@ -112,13 +122,14 @@ class _CreateTaskState extends State<CreateTask> {
     VoidCallback? onTap,
     Widget? suffixIcon,
     int? maxLines,
+    required double screenWidth,
   }) {
     return TextFormField(
       controller: controller,
       decoration: InputDecoration(
         labelText: label,
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(screenWidth * 0.02),
         ),
         suffixIcon: suffixIcon,
       ),
@@ -129,23 +140,23 @@ class _CreateTaskState extends State<CreateTask> {
     );
   }
 
-  Widget _buildCategorySelector(bool isSmallScreen) {
+  Widget _buildCategorySelector(double screenWidth, double avatarRadiusFactor) {
     return Container(
-      height: isSmallScreen ? 64 : 80,
+      height: screenWidth * 0.2,
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
         itemCount: context.read<HomepageController>().imageList.length,
         separatorBuilder: (context, index) => SizedBox(
-          width: isSmallScreen ? 20 : 24,
+          width: screenWidth * 0.05,
         ),
         itemBuilder: (context, index) => InkWell(
           onTap: () => setState(() => selectedImage = index),
           child: CircleAvatar(
-            radius: isSmallScreen ? 32 : 36,
+            radius: screenWidth * avatarRadiusFactor,
             backgroundColor:
                 selectedImage == index ? ColorConstnats.backgroundColor : null,
             child: CircleAvatar(
-              radius: isSmallScreen ? 30 : 34,
+              radius: screenWidth * (avatarRadiusFactor - 0.005),
               backgroundImage: AssetImage(
                 context.read<HomepageController>().imageList[index],
               ),
@@ -156,32 +167,33 @@ class _CreateTaskState extends State<CreateTask> {
     );
   }
 
-  Widget _buildDateTimeRow(bool isSmallScreen) {
+  Widget _buildDateTimeRow(
+      double screenWidth, double screenHeight, bool isSmallScreen) {
     if (isSmallScreen) {
       return Column(
         children: [
-          _buildDateField(),
-          SizedBox(height: isSmallScreen ? 16.0 : 20.0),
-          _buildTimeField(),
+          _buildDateField(screenWidth, screenHeight),
+          SizedBox(height: screenHeight * 0.02),
+          _buildTimeField(screenWidth, screenHeight),
         ],
       );
     }
 
     return Row(
       children: [
-        Expanded(child: _buildDateField()),
-        SizedBox(width: isSmallScreen ? 16.0 : 20.0),
-        Expanded(child: _buildTimeField()),
+        Expanded(child: _buildDateField(screenWidth, screenHeight)),
+        SizedBox(width: screenWidth * 0.04),
+        Expanded(child: _buildTimeField(screenWidth, screenHeight)),
       ],
     );
   }
 
-  Widget _buildDateField() {
+  Widget _buildDateField(double screenWidth, double screenHeight) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildSectionTitle("Date"),
-        SizedBox(height: 8.0),
+        _buildSectionTitle("Date", screenWidth),
+        SizedBox(height: screenHeight * 0.01),
         _buildTextFormField(
           controller: date_controller,
           label: "Date",
@@ -194,17 +206,18 @@ class _CreateTaskState extends State<CreateTask> {
             (date) => selectedDate = date,
           ),
           suffixIcon: Icon(Icons.date_range_outlined),
+          screenWidth: screenWidth,
         ),
       ],
     );
   }
 
-  Widget _buildTimeField() {
+  Widget _buildTimeField(double screenWidth, double screenHeight) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildSectionTitle("Time"),
-        SizedBox(height: 8.0),
+        _buildSectionTitle("Time", screenWidth),
+        SizedBox(height: screenHeight * 0.01),
         _buildTextFormField(
           controller: time_controller,
           label: "Time",
@@ -213,31 +226,39 @@ class _CreateTaskState extends State<CreateTask> {
           readOnly: true,
           onTap: () => CreateTaskHelper.selectTime(context, time_controller),
           suffixIcon: Icon(Icons.access_time_outlined),
+          screenWidth: screenWidth,
         ),
       ],
     );
   }
 
-  Widget _buildNotesField() {
+  Widget _buildNotesField([double? screenWidth]) {
     return _buildTextFormField(
       controller: note_controller,
       label: "Notes",
       validator: (value) =>
           value?.isEmpty ?? true ? 'Please enter notes' : null,
       maxLines: 3,
+      screenWidth: screenWidth ?? MediaQuery.of(context).size.width,
     );
   }
 
-  Widget _buildSaveButton(bool isSmallScreen) {
+  Widget _buildSaveButton(
+      double screenWidth,
+      double screenHeight,
+      double buttonHeightFactor,
+      double buttonHorizontalPaddingFactor,
+      double fontSizeFactor) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: isSmallScreen ? 40.0 : 100.0),
+      padding: EdgeInsets.symmetric(
+          horizontal: screenWidth * buttonHorizontalPaddingFactor),
       child: InkWell(
         onTap: _handleSave,
         child: Container(
-          height: isSmallScreen ? 50 : 60,
+          height: screenHeight * buttonHeightFactor,
           decoration: BoxDecoration(
             color: ColorConstnats.backgroundColor,
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(screenWidth * 0.05),
           ),
           child: Center(
             child: Text(
@@ -245,7 +266,7 @@ class _CreateTaskState extends State<CreateTask> {
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 color: ColorConstnats.primarywhite,
-                fontSize: isSmallScreen ? 16 : 18,
+                fontSize: screenWidth * fontSizeFactor,
               ),
             ),
           ),

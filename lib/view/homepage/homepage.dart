@@ -25,6 +25,21 @@ class _HomepageState extends State<Homepage> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+    final isSmallScreen = screenWidth < 600;
+    final double appBarFontSize = isSmallScreen ? 22 : 24;
+    final double emptyStateIconSize = isSmallScreen ? 80 : 100;
+    final double emptyStateTextSize = isSmallScreen ? 18 : 20;
+    final double buttonHorizontalPadding = isSmallScreen ? 30 : 40;
+    final double buttonVerticalPadding = isSmallScreen ? 12 : 16;
+    final double buttonBorderRadius = isSmallScreen ? 20 : 25;
+    final double listHorizontalPadding = screenWidth * 0.04;
+    final double listItemSpacing = isSmallScreen ? 20 : 25;
+    final double topPadding = screenHeight * 0.02;
+    final double bottomPadding = screenHeight * 0.02;
+    final double fabSize = isSmallScreen ? 56 : 64;
+
     return Scaffold(
       backgroundColor: Colors.grey[50],
       appBar: AppBar(
@@ -37,15 +52,10 @@ class _HomepageState extends State<Homepage> {
           style: TextStyle(
             fontWeight: FontWeight.bold,
             color: ColorConstnats.primarywhite,
-            fontSize: 22,
+            fontSize: appBarFontSize,
           ),
         ),
         centerTitle: true,
-        // shape: const RoundedRectangleBorder(
-        //   borderRadius: BorderRadius.vertical(
-        //     bottom: Radius.circular(70),
-        //   ),
-        // ),
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: ColorConstnats.backgroundColor,
@@ -57,7 +67,10 @@ class _HomepageState extends State<Homepage> {
             ),
           );
         },
-        child: const Icon(Icons.add, color: Colors.white),
+        child: Icon(Icons.add, color: Colors.white, size: fabSize * 0.5),
+        mini: false,
+        elevation: 4,
+        shape: CircleBorder(),
       ),
       body: Consumer<HomepageController>(
         builder: (context, controller, child) {
@@ -68,25 +81,28 @@ class _HomepageState extends State<Homepage> {
                     children: [
                       Icon(
                         Icons.assignment_outlined,
-                        size: 80,
+                        size: emptyStateIconSize,
                         color: Colors.grey[300],
                       ),
-                      const SizedBox(height: 20),
+                      SizedBox(height: screenHeight * 0.02),
                       Text(
                         "No tasks yet",
                         style: TextStyle(
-                          fontSize: 18,
+                          fontSize: emptyStateTextSize,
                           color: Colors.grey[600],
                         ),
                       ),
-                      const SizedBox(height: 20),
+                      SizedBox(height: screenHeight * 0.02),
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           backgroundColor: ColorConstnats.backgroundColor,
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 30, vertical: 12),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: buttonHorizontalPadding,
+                            vertical: buttonVerticalPadding,
+                          ),
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
+                            borderRadius:
+                                BorderRadius.circular(buttonBorderRadius),
                           ),
                         ),
                         onPressed: () {
@@ -99,11 +115,12 @@ class _HomepageState extends State<Homepage> {
                             ),
                           );
                         },
-                        child: const Text(
+                        child: Text(
                           "Add New Task",
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
+                            fontSize: emptyStateTextSize * 0.9,
                           ),
                         ),
                       ),
@@ -111,10 +128,11 @@ class _HomepageState extends State<Homepage> {
                   ),
                 )
               : Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  padding:
+                      EdgeInsets.symmetric(horizontal: listHorizontalPadding),
                   child: Column(
                     children: [
-                      const SizedBox(height: 16),
+                      SizedBox(height: topPadding),
                       Expanded(
                         child: ListView.separated(
                           physics: const BouncingScrollPhysics(),
@@ -139,11 +157,11 @@ class _HomepageState extends State<Homepage> {
                             );
                           },
                           separatorBuilder: (context, index) =>
-                              const SizedBox(height: 20),
+                              SizedBox(height: listItemSpacing),
                           itemCount: HomepageController.notelistKeys.length,
                         ),
                       ),
-                      const SizedBox(height: 20),
+                      SizedBox(height: bottomPadding),
                     ],
                   ),
                 );
