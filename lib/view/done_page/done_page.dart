@@ -25,7 +25,9 @@ class _DonePageState extends State<DonePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: ColorConstnats.primarywhite,
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: ColorConstnats.backgroundColor,
         title: Text(
           "Completed Task",
@@ -36,27 +38,48 @@ class _DonePageState extends State<DonePage> {
       body: Consumer<HomepageController>(
         builder: (context, value, child) => Padding(
           padding: const EdgeInsets.all(8.0),
-          child: ListView.separated(
-              itemBuilder: (context, index) {
-                final currentKey = HomepageController.completedKeys[index];
-                final currentElement =
-                    HomepageController.completedBox.get(currentKey);
-
-                log("completed list--------------------${HomepageController.completedKeys.length}");
-                log("completed list---------------${currentElement}");
-                return Donecard(
-                  index: index,
-                  imageIndex: currentElement["imageIndex"] ?? 0,
-                  title: currentElement["title"] ?? "",
-                  date: currentElement["date"] ?? "",
-                  reason: currentElement["reason"] ?? "no reason",
-                  time: currentElement["time"] ?? "",
-                );
-              },
-              separatorBuilder: (context, index) => SizedBox(
-                    height: 10,
+          child: HomepageController.completedKeys.isEmpty
+              ? Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.assignment_outlined,
+                        size: 80,
+                        color: Colors.grey[300],
+                      ),
+                      const SizedBox(height: 20),
+                      Text(
+                        "No tasks compeleted yet",
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.grey[600],
+                        ),
+                      ),
+                    ],
                   ),
-              itemCount: HomepageController.completedKeys.length),
+                )
+              : ListView.separated(
+                  itemBuilder: (context, index) {
+                    final currentKey = HomepageController.completedKeys[index];
+                    final currentElement =
+                        HomepageController.completedBox.get(currentKey);
+
+                    log("completed list--------------------${HomepageController.completedKeys.length}");
+                    log("completed list---------------${currentElement}");
+                    return Donecard(
+                      index: index,
+                      imageIndex: currentElement["imageIndex"] ?? 0,
+                      title: currentElement["title"] ?? "",
+                      date: currentElement["date"] ?? "",
+                      reason: currentElement["reason"] ?? "no reason",
+                      time: currentElement["time"] ?? "",
+                    );
+                  },
+                  separatorBuilder: (context, index) => SizedBox(
+                        height: 10,
+                      ),
+                  itemCount: HomepageController.completedKeys.length),
         ),
       ),
     );

@@ -26,8 +26,8 @@ class DummyController with ChangeNotifier {
       requestAlertPermission: true,
       requestBadgePermission: true,
       requestSoundPermission: true,
-      onDidReceiveLocalNotification:
-          (int id, String? title, String? body, String? payload) async {},
+      // onDidReceiveLocalNotification:
+      //     (int id, String? title, String? body, String? payload) async {},
     );
 
     // Combined initialization settings
@@ -75,6 +75,7 @@ class DummyController with ChangeNotifier {
     log('Scheduling notification: title--- $title, body--- $body, date--- $scheduledDate, time--- $scheduledTime');
 
     await flutterLocalNotificationsPlugin.zonedSchedule(
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
       id,
       title,
       body,
@@ -85,7 +86,7 @@ class DummyController with ChangeNotifier {
         android: androidNotificationDetails,
         iOS: DarwinNotificationDetails(),
       ),
-      androidAllowWhileIdle: true,
+      // androidAllowWhileIdle: true,
       uiLocalNotificationDateInterpretation:
           UILocalNotificationDateInterpretation.absoluteTime,
       matchDateTimeComponents: DateTimeComponents.dateAndTime,
@@ -185,6 +186,7 @@ class DummyController with ChangeNotifier {
     log("schedule date time--- $scheduledNotificationDateTime");
     log("tz local--- ${tz.TimeZone}");
     return flutterLocalNotificationsPlugin.zonedSchedule(
+        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
         id,
         title,
         body,
@@ -193,7 +195,7 @@ class DummyController with ChangeNotifier {
           tz.local,
         ),
         await notificationDetails(),
-        androidAllowWhileIdle: true,
+        // androidAllowWhileIdle: true,
         uiLocalNotificationDateInterpretation:
             UILocalNotificationDateInterpretation.absoluteTime);
   }

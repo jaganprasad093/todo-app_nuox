@@ -44,7 +44,9 @@ class _CreateTaskState extends State<CreateTask> {
     final isSmallScreen = MediaQuery.of(context).size.width < 600;
 
     return Scaffold(
+      backgroundColor: ColorConstnats.primarywhite,
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: ColorConstnats.backgroundColor,
         title: Text(
           widget.isedit ? "Update task" : "Add New Task",

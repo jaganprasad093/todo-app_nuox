@@ -28,6 +28,7 @@ class _HomepageState extends State<Homepage> {
     return Scaffold(
       backgroundColor: Colors.grey[50],
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: ColorConstnats.backgroundColor,
         elevation: 4,
         shadowColor: Colors.black.withValues(alpha: .2),

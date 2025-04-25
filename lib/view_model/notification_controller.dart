@@ -133,6 +133,7 @@ class NotificationController with ChangeNotifier {
     // required String sound,
   }) async {
     await flutterLocalNotificationsPlugin.zonedSchedule(
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
       id,
       'It\'s time to drink water!',
       'After drinking, touch the cup to confirm',
@@ -147,7 +148,7 @@ class NotificationController with ChangeNotifier {
           // sound: RawResourceAndroidNotificationSound(sound),
         ),
       ),
-      androidAllowWhileIdle: true,
+      // androidAllowWhileIdle: true,
       uiLocalNotificationDateInterpretation:
           UILocalNotificationDateInterpretation.absoluteTime,
       matchDateTimeComponents: DateTimeComponents.time,
