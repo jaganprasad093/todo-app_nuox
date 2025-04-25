@@ -2,7 +2,7 @@
 
 # 📌 Taskify - Flutter Task Manager
 
-![App Banner](assets/screenshots/Simulator Screenshot - jagans emulator - 2025-04-25 at 10.54.53.png) 
+![App Banner](assets/screenshots/image4.png) 
 
 Taskify is a modern task management application built with Flutter. It offers intuitive task organization, smart scheduling with notifications, and a responsive UI powered by the MVVM architecture.
 
@@ -29,7 +29,7 @@ Taskify is a modern task management application built with Flutter. It offers in
 
 | Todo Page | Create Task | Completed Tasks |
 |-----------|-------------|-----------------|
-| ![Todo](assets/screenshots/Simulator Screenshot - jagans emulator - 2025-04-25 at 10.52.24.png) | ![Create](/Users/anasuc/Documents/flutter projects/todo-app_nuox/assets/screenshots/Simulator Screenshot - jagans emulator - 2025-04-25 at 10.52.29.png) | ![Completed](assets/screenshots/Simulator Screenshot - jagans emulator - 2025-04-25 at 10.52.33.png) |
+| ![Todo](assets/screenshots/image1.png) | ![Create](assets/screenshots/image2.png) | ![Completed](assets/screenshots/image3.png) |
 
 > ⚠️ **Note:** Make sure all image files are inside the `assets/screenshots/` folder and listed correctly in your `pubspec.yaml`.
 
