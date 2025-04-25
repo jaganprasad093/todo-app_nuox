@@ -1,10 +1,8 @@
-Sure! Here's a **cleaned-up and improved version of your `README.md` file** with corrections to the markdown syntax, formatting, and suggestions to fix the image visibility issue.
 
----
 
 # 📌 Taskify - Flutter Task Manager
 
-![App Banner](assets/banner.png) <!-- Make sure this image exists at the specified path -->
+![App Banner]("assets/screenshots/Simulator Screenshot - jagans emulator - 2025-04-25 at 10.54.53.png") 
 
 Taskify is a modern task management application built with Flutter. It offers intuitive task organization, smart scheduling with notifications, and a responsive UI powered by the MVVM architecture.
 
@@ -119,7 +117,3 @@ Contributions are welcome! Feel free to fork the repo and submit a pull request.
 
 ## 📄 License
 This project is licensed under the MIT License.
-
----
-
-Let me know if you want me to generate a default `pubspec.yaml` asset entry for the images too!
